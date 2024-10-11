@@ -8,3 +8,11 @@ Route::get('/', function () {
 });
 
 Route::post('/pay/verify', [PaymentController::class, 'verify']);
+
+Route::get('/razorpay', function () {
+    return view('razorpaypayment');
+});
+
+Route::view('/pay/razorpay', 'razorpay');
+
+
