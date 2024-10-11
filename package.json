@@ -20,5 +20,9 @@
         "sass": "^1.56.1",
         "vite": "^5.0",
         "vue": "^3.2.37"
+    },
+    "dependencies": {
+        "@commitlint/cli": "^19.5.0",
+        "@commitlint/config-conventional": "^19.5.0"
     }
 }
