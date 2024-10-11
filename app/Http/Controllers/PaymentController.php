@@ -52,9 +52,9 @@ class PaymentController extends Controller
         }
 
         if ($success === true) {
-            return redirect('/payment')->with('success', $success);
+            return redirect('/')->with('success', $success);
         } else {
-            return redirect('/payment')->with('error', $error);
+            return redirect('/')->with('error', $error);
         }
     }
 }
