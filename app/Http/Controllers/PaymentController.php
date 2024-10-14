@@ -58,6 +58,7 @@ class PaymentController extends Controller
                 $api->utility->verifyPaymentSignature($attributes);
 
                 $dbData = [
+                    'status' => 'confirm',
                     'razorpay_payment_id' => $request->razorpay_payment_id,
                     'razorpay_signature' => $request->razorpay_signature,
                 ];
