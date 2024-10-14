@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('status')->default('Pending');
             $table->float('amount');
-            $table->string('razorpay_order_id');
-            $table->string('razorpay_payment_id')->nullable();
-            $table->string('razorpay_signature')->nullable();
+            $table->string('razorpay_order_id')->unique();
+            $table->string('razorpay_payment_id')->unique()->nullable();
+            $table->string('razorpay_signature')->unique()->nullable();
             $table->timestamps();
         });
     }
