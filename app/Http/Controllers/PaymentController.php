@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 use Razorpay\Api\Errors\SignatureVerificationError;
@@ -9,32 +10,42 @@ use Razorpay\Api\Errors\SignatureVerificationError;
 class PaymentController extends Controller
 {
     protected $api;
+
     public function __construct()
     {
-        $api = new Api(env("RAZORPAY_KEY"), env("RAZORPAY_SECRET"));
+        $api = new Api(env('RAZORPAY_KEY'), env('RAZORPAY_SECRET'));
         $this->api = $api;
     }
+
     public function razorpay(Request $request)
     {
         $api = $this->api;
         $orderData = $api->order->create([
             'receipt' => '111',
             'amount' => $request->amount * 100,
-            'currency' => 'INR'
+            'currency' => 'INR',
         ]);
 
         $data = [
-            "key" => env("RAZORPAY_KEY"),
-            "amount" => $request->amount * 100,
-            "order_id" => $orderData['id'],
+            'key' => env('RAZORPAY_KEY'),
+            'amount' => $request->amount * 100,
+            'order_id' => $orderData['id'],
         ];
+
+        $dbData = [
+            'razorpay_order_id' => $orderData['id'],
+            'amount' => $request->amount * 100,
+        ];
+
+        Order::create($dbData);
+
         return response()->json($data, 200);
     }
 
-    function verify(Request $request)
+    public function verify(Request $request)
     {
         $success = true;
-        $error = "Payment Failed!";
+        $error = 'Payment Failed!';
 
         if (empty($request->razorpay_payment_id) === false) {
             $api = $this->api;
@@ -42,12 +53,19 @@ class PaymentController extends Controller
                 $attributes = [
                     'razorpay_order_id' => $request->razorpay_order_id,
                     'razorpay_payment_id' => $request->razorpay_payment_id,
-                    'razorpay_signature' => $request->razorpay_signature
+                    'razorpay_signature' => $request->razorpay_signature,
                 ];
                 $api->utility->verifyPaymentSignature($attributes);
+
+                $dbData = [
+                    'razorpay_payment_id' => $request->razorpay_payment_id,
+                    'razorpay_signature' => $request->razorpay_signature,
+                ];
+
+                Order::where('razorpay_order_id', $request->razorpay_order_id)->update($dbData);
             } catch (SignatureVerificationError $e) {
                 $success = false;
-                $error = 'Razorpay Error : ' . $e->getMessage();
+                $error = 'Razorpay Error : '.$e->getMessage();
             }
         }
 
