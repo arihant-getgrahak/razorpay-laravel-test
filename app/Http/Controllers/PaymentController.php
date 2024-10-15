@@ -139,4 +139,29 @@ class PaymentController extends Controller
             ], 400);
         }
     }
+
+    public function sendStatus(Request $request)
+    {
+        try {
+            $order_id = $request->order_id;
+            $order = Order::where('razorpay_order_id', $order_id)->first();
+            if (! $order) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order not found',
+                ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'status' => $order->status,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+    public funct
 }
