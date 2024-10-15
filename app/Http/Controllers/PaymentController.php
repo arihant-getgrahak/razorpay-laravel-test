@@ -76,4 +76,67 @@ class PaymentController extends Controller
             return redirect('/')->with('error', $error);
         }
     }
+
+    public function webhookSignatureVerify(Request $request)
+    {
+        $api = $this->api;
+
+        try {
+            $payload = $request->getContent();
+            $signature = $request->header('X-Razorpay-Signature');
+            $secret = env('RAZORPAY_WEBHOOK_SECRET');
+
+            if (! $api->utility->verifyWebhookSignature($payload, $signature, $secret)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Invalid signature 1',
+                ], 400);
+            }
+
+            $data = json_decode($payload, true);
+            $paymentEntity = $data['payload']['payment']['entity'] ?? [];
+            $payment_id = $paymentEntity['id'] ?? null;
+            $order_id = $paymentEntity['order_id'] ?? null;
+            $payment_status = $data['event'] ?? null;
+
+            if (! $payment_status || ! $order_id) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Invalid signature 2',
+                ], 400);
+            }
+
+            $status = [
+                'payment.captured' => 'captured',
+                'payment.authorized' => 'authorized',
+                'payment.failed' => 'failed',
+            ];
+
+            if (array_key_exists($payment_status, $status)) {
+                $dbData = [
+                    'status' => $status[$payment_status],
+                    'razorpay_payment_id' => $payment_id,
+                    'razorpay_signature' => $secret,
+                ];
+
+                Order::where('razorpay_order_id', $order_id)->update($dbData);
+
+                return response()->json([
+                    'success' => true,
+                    'payment_status' => $status[$payment_status] === 'failed' ? 'Payment Failed' : $payment_status,
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => false,
+                'payment_status' => 'invalid status',
+            ], 400);
+
+        } catch (SignatureVerificationError $e) {
+            return response()->json([
+                'success' => false,
+                'payment_status' => $e->getMessage(),
+            ], 400);
+        }
+    }
 }
