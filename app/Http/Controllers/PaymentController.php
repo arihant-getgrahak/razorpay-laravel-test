@@ -185,4 +185,25 @@ class PaymentController extends Controller
         }
 
     }
+
+    public function handlePaymentFail(Request $request)
+    {
+        try {
+            $order_id = $request->order_id;
+            Order::where('razorpay_order_id', $order_id)->update([
+                'status' => 'failed',
+                'message' => $request->message,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'status' => $order_id,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
 }
