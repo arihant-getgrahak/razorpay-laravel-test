@@ -163,5 +163,26 @@ class PaymentController extends Controller
             ], 400);
         }
     }
-    public funct
+
+    public function orderCancel(Request $request)
+    {
+        try {
+            $order_id = $request->order_id;
+
+            Order::where('razorpay_order_id', $order_id)->update([
+                'status' => 'cancel',
+            ]);
+
+            return response()->json([
+                'success' => true,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+
+    }
 }
