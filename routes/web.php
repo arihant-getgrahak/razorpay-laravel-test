@@ -1,18 +1,16 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/pay/verify', [PaymentController::class, 'verify']);
+Route::post('arihant/razorpay/public/pay/verify', [PaymentController::class, 'verify']);
 
-Route::get('/razorpay', function () {
+Route::get('arihant/razorpay/public/razorpay', function () {
     return view('razorpaypayment');
 });
 
-Route::view('/pay/razorpay', 'razorpay');
-
-
+Route::view('arihant/razorpay/public/pay/razorpay', 'razorpay');

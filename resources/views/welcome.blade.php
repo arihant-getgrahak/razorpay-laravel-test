@@ -9,7 +9,7 @@
 
 <body>
     <h1>Welcome</h1>
-    <a href="/razorpay">Pay with Razorpay</a>
+    <a href="arihant/razorpay/public/razorpay">Pay with Razorpay</a>
 
     <script>
         if ("{{session('success')}}") {
