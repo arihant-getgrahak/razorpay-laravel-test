@@ -25,7 +25,7 @@
             e.preventDefault();
 
             // This AJAX request will send the order details and get the Razorpay order ID
-            fetch("{{ url('api/user/arihant/razorpay/public/payment/create-order') }}", {
+            fetch("{{ url('api/user/payment/create-order') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +67,7 @@
 
                     var rzp1 = new Razorpay(options);
                     rzp1.on('payment.failed', async function (response) {
-                        const res = await fetch("{{ url('api/user/arihant/razorpay/public/payment/fail') }}", {
+                        const res = await fetch("{{ url('api/user/payment/fail') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

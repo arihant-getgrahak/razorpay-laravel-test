@@ -21,8 +21,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'user'], function () {
 
-    Route::post('arihant/razorpay/public/payment/create-order', [PaymentController::class, 'razorpay']);
-    Route::post('arihant/razorpay/public/payment/fail', [PaymentController::class, 'handlePaymentFail']);
+    // Route::post('arihant/razorpay/public/payment/create-order', [PaymentController::class, 'razorpay']);
+    // Route::post('arihant/razorpay/public/payment/fail', [PaymentController::class, 'handlePaymentFail']);
+
+    Route::post('payment/create-order', [PaymentController::class, 'razorpay']);
+    Route::post('payment/fail', [PaymentController::class, 'handlePaymentFail']);
 });
 
 Route::post('arihant/razorpay/public/payment/razorpay', [PaymentController::class, 'razorpay'])->name('paymentRazorpay');
