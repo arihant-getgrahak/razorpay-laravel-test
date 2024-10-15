@@ -67,7 +67,7 @@
 
                     var rzp1 = new Razorpay(options);
                     rzp1.on('payment.failed', async function (response) {
-                        const res = await fetch("{{ url('api/user/arihant/razorpay/public/payment/cancel') }}", {
+                        const res = await fetch("{{ url('api/user/arihant/razorpay/public/payment/fail') }}", {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
