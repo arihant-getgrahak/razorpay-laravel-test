@@ -10,7 +10,7 @@
 <body>
     <h1>Razorpay Payment</h1>
 
-    <form id="paymentForm" method="POST" action="{{ url('pay/verify') }}">
+    <form id="paymentForm" method="POST" action="{{ url('arihant/razorpay/public/pay/verify') }}">
         @csrf
         <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
         <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
