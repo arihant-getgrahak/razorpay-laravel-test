@@ -19,9 +19,6 @@
             console.log("Payment Failed");
             alert("Payment Failed");
         }
-        else {
-            alert("Payment Failed");
-        }
     </script>
 </body>
 
