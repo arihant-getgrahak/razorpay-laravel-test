@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PaymentController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,10 +21,8 @@ use App\Http\Controllers\PaymentController;
 
 Route::post('payment/razorpay', [PaymentController::class, 'razorpay'])->name('paymentRazorpay');
 
-Route::group(['prefix' => 'user'], function () {
-    // Route::group(['middleware' => 'auth:api'], function () {
-        Route::post('payment/create-order', [PaymentController::class, 'razorpay']);
-        // Route::post('payment/cancel', [PaymentController::class, 'cancelOrder']);
-        // Route::post('webhook/razorpay', [PaymentController::class, 'handleWebhook']);
-    });
-// });
+Route::post('payment/create-order', [PaymentController::class, 'razorpay']);
+Route::post('razorpay/webhook', [PaymentController::class, 'webhookSignatureVerify']);
+Route::post('razorpay/webhook', [PaymentController::class, 'webhookSignatureVerify']);
+Route::post('order/cancel', [PaymentController::class, 'orderCancel']);
+Route::post('order/status', [PaymentController::class, 'sendStatus']);
