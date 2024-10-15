@@ -19,9 +19,13 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('payment/razorpay', [PaymentController::class, 'razorpay'])->name('paymentRazorpay');
+Route::group(['prefix' => 'user'], function () {
 
-Route::post('payment/create-order', [PaymentController::class, 'razorpay']);
+    Route::post('arihant/razorpay/public/payment/create-order', [PaymentController::class, 'razorpay']);
+});
+
+Route::post('arihant/razorpay/public/payment/razorpay', [PaymentController::class, 'razorpay'])->name('paymentRazorpay');
+
 Route::post('razorpay/webhook', [PaymentController::class, 'webhookSignatureVerify']);
 Route::post('razorpay/webhook', [PaymentController::class, 'webhookSignatureVerify']);
 Route::post('order/cancel', [PaymentController::class, 'orderCancel']);
