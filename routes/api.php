@@ -26,7 +26,6 @@ Route::group(['prefix' => 'user'], function () {
 
 Route::post('arihant/razorpay/public/payment/razorpay', [PaymentController::class, 'razorpay'])->name('paymentRazorpay');
 
-Route::post('razorpay/webhook', [PaymentController::class, 'webhookSignatureVerify']);
-Route::post('razorpay/webhook', [PaymentController::class, 'webhookSignatureVerify']);
-Route::post('order/cancel', [PaymentController::class, 'orderCancel']);
-Route::post('order/status', [PaymentController::class, 'sendStatus']);
+Route::post('arihant/razorpay/public/razorpay/webhook', [PaymentController::class, 'webhookSignatureVerify']);
+Route::post('arihant/razorpay/public/order/cancel', [PaymentController::class, 'orderCancel']);
+Route::post('arihant/razorpay/public/order/status', [PaymentController::class, 'sendStatus']);
