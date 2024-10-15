@@ -61,7 +61,7 @@ class PaymentController extends Controller
                     'status' => 'confirm',
                     'razorpay_payment_id' => $request->razorpay_payment_id,
                     'razorpay_signature' => $request->razorpay_signature,
-                    'message' => 'null',
+                    'message' => null,
                 ];
 
                 Order::where('razorpay_order_id', $request->razorpay_order_id)->update($dbData);
