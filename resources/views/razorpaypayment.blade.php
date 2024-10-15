@@ -1,12 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Razorpay Payment</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
+
 <body>
     <h1>Razorpay Payment</h1>
 
@@ -20,7 +21,7 @@
     </form>
 
     <script>
-        document.getElementById('payBtn').onclick = function(e) {
+        document.getElementById('payBtn').onclick = function (e) {
             e.preventDefault();
 
             // This AJAX request will send the order details and get the Razorpay order ID
@@ -36,39 +37,57 @@
                     amount: 1000 // Amount in rupees
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                // Initialize Razorpay with the order ID and other data
-                var options = {
-                    "key": "{{ env('RAZORPAY_KEY') }}", // Your Razorpay Key
-                    "amount": data.amount * 100, // Amount in paise
-                    "currency": "INR",
-                    "name": data.name,
-                    "description": "Test Transaction",
-                    "order_id": data.order_id, // Order ID from Razorpay
-                    "handler": function (response){
-                        // Set the payment details in the form fields
-                        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-                        document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
-                        document.getElementById('razorpay_signature').value = response.razorpay_signature;
-                        
-                        // Submit the form to verify the payment
-                        document.getElementById('paymentForm').submit();
-                    },
-                    "prefill": {
+                .then(response => response.json())
+                .then(data => {
+                    // Initialize Razorpay with the order ID and other data
+                    var options = {
+                        "key": "{{ env('RAZORPAY_KEY') }}", // Your Razorpay Key
+                        "amount": data.amount * 100, // Amount in paise
+                        "currency": "INR",
                         "name": data.name,
-                        "email": data.email
-                    },
-                    "theme": {
-                        "color": "#F37254"
-                    }
-                };
+                        "description": "Test Transaction",
+                        "order_id": data.order_id, // Order ID from Razorpay
+                        "handler": function (response) {
+                            // Set the payment details in the form fields
+                            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                            document.getElementById('razorpay_signature').value = response.razorpay_signature;
 
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            })
-            .catch(error => console.error('Error:', error));
+                            // Submit the form to verify the payment
+                            document.getElementById('paymentForm').submit();
+                        },
+                        "prefill": {
+                            "name": data.name,
+                            "email": data.email
+                        },
+                        "theme": {
+                            "color": "#F37254"
+                        }
+                    };
+
+                    var rzp1 = new Razorpay(options);
+                    rzp1.on('payment.failed', async function (response) {
+                        const res = await fetch("{{ url('api/user/arihant/razorpay/public/payment/cancel') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                order_id: response.error.metadata.order_id,
+                                message: response.error.description
+                            })
+                        })
+                        const data = await res.json();
+                        if (!data.success) {
+                            alert(data.message);
+                        }
+                    });
+                    rzp1.open();
+                })
+                .catch(error => console.error('Error:', error));
         };
     </script>
 </body>
+
 </html>
