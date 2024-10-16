@@ -10,16 +10,6 @@
 <body>
     <h1>Welcome</h1>
     <a href="arihant/razorpay/public/razorpay">Pay with Razorpay</a>
-
-    <script>
-        if ("{{session('success')}}") {
-            alert("Payment Successful");
-        }
-        else if("{{session('error')}}") {
-            console.log("Payment Failed");
-            alert("Payment Failed");
-        }
-    </script>
 </body>
 
 </html>

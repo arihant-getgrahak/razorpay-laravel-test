@@ -65,7 +65,7 @@
                 .then(data => {
                     window.location.href = `/arihant/razorpay/public/pay?order_id=${data.order_id}&amount=${data.amount}&name=${data.name}&email=${data.email}`;
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => alert(error));
         };
     </script>
 </body>

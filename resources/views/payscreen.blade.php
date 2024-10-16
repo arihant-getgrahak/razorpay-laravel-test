@@ -79,7 +79,7 @@
                 rzp1.open();
             }
             catch (error) {
-                console.log(error);
+                alert(error);
             }
         }
 
@@ -87,8 +87,7 @@
             e.preventDefault();
             const urlParams = new URLSearchParams(window.location.search);
             const order_id = urlParams.get('order_id');
-            console.log("cancel clicked");
-            console.log("ddd" + order_id);
+           
             const res = await fetch("{{ url('api/order/cancel') }}", {
                 method: 'POST',
                 headers: {
