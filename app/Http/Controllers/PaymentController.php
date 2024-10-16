@@ -71,10 +71,12 @@ class PaymentController extends Controller
                     'message' => null,
                 ];
 
-                Order::where('razorpay_order_id', $request->razorpay_order_id)->update($dbData);
+                $order = Order::where('razorpay_order_id', $request->razorpay_order_id)->first();
+
+                $order->update($dbData);
                 $res = [
-                    'name' => $request->name,
-                    'amount' => $request->amount,
+                    'name' => $order->name,
+                    'amount' => $order->amount,
                 ];
             } catch (SignatureVerificationError $e) {
                 $success = false;
