@@ -9,14 +9,14 @@ Route::get('/', function () {
 
 Route::post('arihant/razorpay/public/pay/verify', [PaymentController::class, 'verify']);
 
-Route::get('arihant/razorpay/public/razorpay', function () {
+Route::get('razorpay', function () {
     return view('razorpaypayment');
 });
 
 Route::get('arihant/razorpay/public/order-confirm', function () {
     return view('orderconfirm');
 });
-Route::get('arihant/razorpay/public/pay', function () {
+Route::get('pay', function () {
     return view('payscreen');
 });
 
