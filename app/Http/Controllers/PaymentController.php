@@ -30,6 +30,8 @@ class PaymentController extends Controller
             'key' => env('RAZORPAY_KEY'),
             'amount' => $request->amount * 100,
             'order_id' => $orderData['id'],
+            'name' => $request->name,
+            'email' => $request->email,
         ];
 
         $dbData = [
