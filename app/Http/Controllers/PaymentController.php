@@ -29,7 +29,7 @@ class PaymentController extends Controller
 
         $data = [
             'key' => env('RAZORPAY_KEY'),
-            'amount' => $request->amount * 100,
+            'amount' => $request->amount,
             'order_id' => $orderData['id'],
             'name' => $request->name,
             'email' => $request->email,
@@ -37,7 +37,7 @@ class PaymentController extends Controller
 
         $dbData = [
             'razorpay_order_id' => $orderData['id'],
-            'amount' => $request->amount * 100,
+            'amount' => $request->amount,
         ];
 
         Order::create($dbData);
