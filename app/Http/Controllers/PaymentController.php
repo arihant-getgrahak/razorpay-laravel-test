@@ -189,7 +189,15 @@ class PaymentController extends Controller
         try {
             $order_id = $request->order_id;
 
-            Order::where('razorpay_order_id', $order_id)->update([
+            $order = Order::where('razorpay_order_id', $order_id)->first();
+
+            if ($order->status == 'cancel') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order already cancelled',
+                ], 400);
+            }
+            $order->update([
                 'status' => 'cancel',
             ]);
 
