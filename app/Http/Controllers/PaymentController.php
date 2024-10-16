@@ -19,6 +19,7 @@ class PaymentController extends Controller
 
     public function razorpay(Request $request)
     {
+
         $api = $this->api;
         $orderData = $api->order->create([
             'receipt' => '111',
@@ -46,6 +47,7 @@ class PaymentController extends Controller
 
     public function verify(Request $request)
     {
+
         $success = true;
         $error = 'Payment Failed!';
 
@@ -67,6 +69,10 @@ class PaymentController extends Controller
                 ];
 
                 Order::where('razorpay_order_id', $request->razorpay_order_id)->update($dbData);
+                $res = [
+                    'name' => $request->name,
+                    'amount' => $request->amount * 100,
+                ];
             } catch (SignatureVerificationError $e) {
                 $success = false;
                 $error = 'Razorpay Error : '.$e->getMessage();
@@ -74,9 +80,19 @@ class PaymentController extends Controller
         }
 
         if ($success === true) {
-            return redirect('arihant/razorpay/public/order-confirm')->with('success', $success);
+            $res += [
+                'status' => 'Order Confirm',
+                'success' => true,
+            ];
+
+            return view('orderconfirm', compact('res'));
         } else {
-            return redirect('arihant/razorpay/public/order-confirm')->with('error', $error);
+            $res += [
+                'status' => 'Order Confirm',
+                'error' => $error,
+            ];
+
+            return view('orderconfirm', compact('res'));
         }
     }
 
