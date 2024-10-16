@@ -77,9 +77,6 @@
                             document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
                             document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
                             document.getElementById('razorpay_signature').value = response.razorpay_signature;
-                            document.getElementById('name').value = "";
-                            document.getElementById('email').value = "";
-                            document.getElementById('amount').value = "";
                             document.getElementById('paymentForm').submit();
                         },
                         "prefill": {
