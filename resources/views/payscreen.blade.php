@@ -103,7 +103,7 @@
                 alert(data.message);
             }
             alert("Order Cancelled");
-            window.location.href = '/';
+            window.location.href = '/arihant/razorpay/public';
         }
 
     </script>
