@@ -13,4 +13,8 @@ Route::get('arihant/razorpay/public/razorpay', function () {
     return view('razorpaypayment');
 });
 
+Route::get('arihant/razorpay/public/order-confirm', function () {
+    return view('orderconfirm');
+});
+
 Route::view('arihant/razorpay/public/pay/razorpay', 'razorpay');
