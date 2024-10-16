@@ -47,7 +47,7 @@
                     "order_id": order_id,
                     "handler": function (response) {
                         document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-                        document.getElementById('razorpay_order_id').value = response.order_id;
+                        document.getElementById('razorpay_order_id').value = order_id;
                         document.getElementById('razorpay_signature').value = response.razorpay_signature;
                         document.getElementById('paymentForm').submit();
                     },
