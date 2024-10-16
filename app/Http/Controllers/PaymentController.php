@@ -19,6 +19,7 @@ class PaymentController extends Controller
 
     public function razorpay(Request $request)
     {
+
         $api = $this->api;
         $orderData = $api->order->create([
             'receipt' => '111',
@@ -28,13 +29,17 @@ class PaymentController extends Controller
 
         $data = [
             'key' => env('RAZORPAY_KEY'),
-            'amount' => $request->amount * 100,
+            'amount' => $request->amount,
             'order_id' => $orderData['id'],
+            'name' => $request->name,
+            'email' => $request->email,
         ];
 
         $dbData = [
             'razorpay_order_id' => $orderData['id'],
-            'amount' => $request->amount * 100,
+            'amount' => $request->amount,
+            'name' => $request->name,
+            'email' => $request->email,
         ];
 
         Order::create($dbData);
@@ -44,8 +49,10 @@ class PaymentController extends Controller
 
     public function verify(Request $request)
     {
+
         $success = true;
         $error = 'Payment Failed!';
+        $res = [];
 
         if (empty($request->razorpay_payment_id) === false) {
             $api = $this->api;
@@ -64,7 +71,13 @@ class PaymentController extends Controller
                     'message' => null,
                 ];
 
-                Order::where('razorpay_order_id', $request->razorpay_order_id)->update($dbData);
+                $order = Order::where('razorpay_order_id', $request->razorpay_order_id)->first();
+
+                $order->update($dbData);
+                $res = [
+                    'name' => $order->name,
+                    'amount' => $order->amount,
+                ];
             } catch (SignatureVerificationError $e) {
                 $success = false;
                 $error = 'Razorpay Error : '.$e->getMessage();
@@ -72,9 +85,19 @@ class PaymentController extends Controller
         }
 
         if ($success === true) {
-            return redirect('/')->with('success', $success);
+            $res += [
+                'status' => 'Order Confirm',
+                'success' => true,
+            ];
+
+            return view('orderconfirm', compact('res'));
         } else {
-            return redirect('/')->with('error', $error);
+            $res += [
+                'status' => 'Payment Failed',
+                'success' => false,
+            ];
+
+            return view('orderconfirm', compact('res'));
         }
     }
 
@@ -170,8 +193,17 @@ class PaymentController extends Controller
         try {
             $order_id = $request->order_id;
 
-            Order::where('razorpay_order_id', $order_id)->update([
+            $order = Order::where('razorpay_order_id', $order_id)->first();
+
+            if ($order->status == 'cancel') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order already cancelled',
+                ], 400);
+            }
+            $order->update([
                 'status' => 'cancel',
+                'message' => null,
             ]);
 
             return response()->json([

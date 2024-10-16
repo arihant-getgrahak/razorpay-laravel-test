@@ -15,5 +15,7 @@ class Order extends Model
         'razorpay_order_id',
         'razorpay_payment_id',
         'razorpay_signature',
+        'name',
+        'email',
     ];
 }
