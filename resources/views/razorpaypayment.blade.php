@@ -40,8 +40,9 @@
 
                 <div>
                     <button type="submit" id="payBtn"
-                        class="w-full bg-blue-500 text-white p-2 rounded-md shadow-lg hover:bg-blue-600 transition duration-300">Pay
-                        Now</button>
+                        class="w-full bg-blue-500 text-white p-2 rounded-md shadow-lg hover:bg-blue-600 transition duration-300">
+                        PayNow
+                    </button>
                 </div>
             </form>
         </div>
