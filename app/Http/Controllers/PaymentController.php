@@ -74,9 +74,9 @@ class PaymentController extends Controller
         }
 
         if ($success === true) {
-            return redirect('/')->with('success', $success);
+            return redirect('arihant/razorpay/public/order-confirm')->with('success', $success);
         } else {
-            return redirect('/')->with('error', $error);
+            return redirect('arihant/razorpay/public/order-confirm')->with('error', $error);
         }
     }
 
