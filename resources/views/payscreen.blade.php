@@ -16,11 +16,13 @@
         <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
         <input type="hidden" name="razorpay_signature" id="razorpay_signature">
         <button type="submit" id="payBtn"
-            class="text-black p-2 rounded-md shadow-lg border border-gray-500 hover:bg-blue-500 w-[50%]">Pay with
+            class="text-black p-2 rounded-md shadow-lg border border-gray-500 hover:bg-blue-500 hover:text-white">Pay
+            with
             Razorpay</button>
     </form>
 
     <script>
+
         document.getElementById('payBtn').onclick = function (e) {
             e.preventDefault();
             const urlParams = new URLSearchParams(window.location.search);
@@ -62,7 +64,7 @@
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         body: JSON.stringify({
-                            order_id: response.error.morder_id,
+                            order_id: response.error.metadata.order_id,
                             message: response.error.description
                         })
                     })
@@ -72,6 +74,8 @@
                     }
                 });
                 rzp1.open();
+
+                
             }
             catch (error) {
                 console.log(error);

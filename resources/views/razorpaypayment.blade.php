@@ -64,48 +64,6 @@
                 .then(response => response.json())
                 .then(data => {
                     window.location.href = `/arihant/razorpay/public/pay?order_id=${data.order_id}&amount=${data.amount}&name=${data.name}&email=${data.email}`;
-                    // var options = {
-                    //     "key": "{{ env('RAZORPAY_KEY') }}",
-                    //     "amount": data.amount * 100,
-                    //     "currency": "INR",
-                    //     "name": data.name,
-                    //     "description": "Test Transaction",
-                    //     "order_id": data.order_id,
-                    //     "handler": function (response) {
-                    //         document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-                    //         document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
-                    //         document.getElementById('razorpay_signature').value = response.razorpay_signature;
-                    //         document.getElementById('paymentForm').submit();
-                    //     },
-                    //     "prefill": {
-                    //         "name": data.name,
-                    //         "email": data.email
-                    //     },
-                    //     "theme": {
-                    //         "color": "#F37254"
-                    //     }
-                    // };
-
-
-                    // var rzp1 = new Razorpay(options);
-                    // rzp1.on('payment.failed', async function (response) {
-                    //     const res = await fetch("{{ url('api/user/payment/fail') }}", {
-                    //         method: 'POST',
-                    //         headers: {
-                    //             'Content-Type': 'application/json',
-                    //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    //         },
-                    //         body: JSON.stringify({
-                    //             order_id: response.error.metadata.order_id,
-                    //             message: response.error.description
-                    //         })
-                    //     })
-                    //     const data = await res.json();
-                    //     if (!data.success) {
-                    //         alert(data.message);
-                    //     }
-                    // });
-                    // rzp1.open();
                 })
                 .catch(error => console.error('Error:', error));
         };
