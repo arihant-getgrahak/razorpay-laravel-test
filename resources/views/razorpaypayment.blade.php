@@ -51,7 +51,6 @@
         document.getElementById('payBtn').onclick = function (e) {
             e.preventDefault();
 
-            // This AJAX request will send the order details and get the Razorpay order ID
             fetch("{{ url('api/user/payment/create-order') }}", {
                 method: 'POST',
                 headers: {
@@ -59,28 +58,27 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({
-                    name: 'John Doe', // Get actual user details dynamically
-                    email: 'john@example.com',
-                    amount: 1000 // Amount in rupees
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    amount: document.getElementById('amount').value
                 })
             })
                 .then(response => response.json())
                 .then(data => {
-                    // Initialize Razorpay with the order ID and other data
                     var options = {
-                        "key": "{{ env('RAZORPAY_KEY') }}", // Your Razorpay Key
-                        "amount": data.amount * 100, // Amount in paise
+                        "key": "{{ env('RAZORPAY_KEY') }}",
+                        "amount": data.amount * 100,
                         "currency": "INR",
                         "name": data.name,
                         "description": "Test Transaction",
-                        "order_id": data.order_id, // Order ID from Razorpay
+                        "order_id": data.order_id,
                         "handler": function (response) {
-                            // Set the payment details in the form fields
                             document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
                             document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
                             document.getElementById('razorpay_signature').value = response.razorpay_signature;
-
-                            // Submit the form to verify the payment
+                            document.getElementById('name').value = "";
+                            document.getElementById('email').value = "";
+                            document.getElementById('amount').value = "";
                             document.getElementById('paymentForm').submit();
                         },
                         "prefill": {
