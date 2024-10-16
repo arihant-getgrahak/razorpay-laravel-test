@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('arihant/razorpay/public/pay/verify', [PaymentController::class, 'verify']);
+Route::post('verify', [PaymentController::class, 'verify']);
 
 Route::get('razorpay', function () {
     return view('razorpaypayment');
@@ -19,5 +19,3 @@ Route::get('arihant/razorpay/public/order-confirm', function () {
 Route::get('pay', function () {
     return view('payscreen');
 });
-
-Route::view('arihant/razorpay/public/pay/razorpay', 'razorpay');
