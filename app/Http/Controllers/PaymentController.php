@@ -199,6 +199,7 @@ class PaymentController extends Controller
             }
             $order->update([
                 'status' => 'cancel',
+                'message' => null,
             ]);
 
             return response()->json([
