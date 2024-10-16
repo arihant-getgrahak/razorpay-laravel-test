@@ -36,9 +36,10 @@
             const razorpay_order_id = urlParams.get('razorpay_order_id');
             const razorpay_payment_id = urlParams.get('razorpay_payment_id');
             const razorpay_signature = urlParams.get('razorpay_signature');
+            const key = urlParams.get("key")
             try {
                 var options = {
-                    "key": "{{ env('RAZORPAY_KEY') }}",
+                    "key": key,
                     "amount": amount * 100,
                     "currency": "INR",
                     "name": name,
@@ -87,7 +88,7 @@
             e.preventDefault();
             const urlParams = new URLSearchParams(window.location.search);
             const order_id = urlParams.get('order_id');
-           
+
             const res = await fetch("{{ url('api/order/cancel') }}", {
                 method: 'POST',
                 headers: {
