@@ -7,7 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('verify', [PaymentController::class, 'verify']);
+Route::post('pay/verify', [PaymentController::class, 'verify']);
 
 Route::get('razorpay', function () {
     return view('razorpaypayment');
