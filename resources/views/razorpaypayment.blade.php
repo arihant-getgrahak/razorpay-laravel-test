@@ -14,12 +14,9 @@
 
     <body class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-            <form id="paymentForm" method="POST" action="{{ url('arihant/razorpay/public/pay/verify') }}"
-                class="space-y-6">
+            <form id="paymentForm" class="space-y-6">
                 @csrf
-                <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
-                <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
-                <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+
 
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
@@ -66,47 +63,49 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    var options = {
-                        "key": "{{ env('RAZORPAY_KEY') }}",
-                        "amount": data.amount * 100,
-                        "currency": "INR",
-                        "name": data.name,
-                        "description": "Test Transaction",
-                        "order_id": data.order_id,
-                        "handler": function (response) {
-                            document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
-                            document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
-                            document.getElementById('razorpay_signature').value = response.razorpay_signature;
-                            document.getElementById('paymentForm').submit();
-                        },
-                        "prefill": {
-                            "name": data.name,
-                            "email": data.email
-                        },
-                        "theme": {
-                            "color": "#F37254"
-                        }
-                    };
+                    window.location.href = `/arihant/razorpay/public/pay?order_id=${data.order_id}&amount=${data.amount}&name=${data.name}&email=${data.email}`;
+                    // var options = {
+                    //     "key": "{{ env('RAZORPAY_KEY') }}",
+                    //     "amount": data.amount * 100,
+                    //     "currency": "INR",
+                    //     "name": data.name,
+                    //     "description": "Test Transaction",
+                    //     "order_id": data.order_id,
+                    //     "handler": function (response) {
+                    //         document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                    //         document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                    //         document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                    //         document.getElementById('paymentForm').submit();
+                    //     },
+                    //     "prefill": {
+                    //         "name": data.name,
+                    //         "email": data.email
+                    //     },
+                    //     "theme": {
+                    //         "color": "#F37254"
+                    //     }
+                    // };
 
-                    var rzp1 = new Razorpay(options);
-                    rzp1.on('payment.failed', async function (response) {
-                        const res = await fetch("{{ url('api/user/payment/fail') }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                order_id: response.error.metadata.order_id,
-                                message: response.error.description
-                            })
-                        })
-                        const data = await res.json();
-                        if (!data.success) {
-                            alert(data.message);
-                        }
-                    });
-                    rzp1.open();
+
+                    // var rzp1 = new Razorpay(options);
+                    // rzp1.on('payment.failed', async function (response) {
+                    //     const res = await fetch("{{ url('api/user/payment/fail') }}", {
+                    //         method: 'POST',
+                    //         headers: {
+                    //             'Content-Type': 'application/json',
+                    //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    //         },
+                    //         body: JSON.stringify({
+                    //             order_id: response.error.metadata.order_id,
+                    //             message: response.error.description
+                    //         })
+                    //     })
+                    //     const data = await res.json();
+                    //     if (!data.success) {
+                    //         alert(data.message);
+                    //     }
+                    // });
+                    // rzp1.open();
                 })
                 .catch(error => console.error('Error:', error));
         };
