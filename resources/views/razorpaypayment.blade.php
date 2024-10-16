@@ -63,7 +63,7 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    window.location.href = `/arihant/razorpay/public/pay?order_id=${data.order_id}&amount=${data.amount}&name=${data.name}&email=${data.email}`;
+                    window.location.href = `/arihant/razorpay/public/pay?order_id=${data.order_id}&amount=${data.amount}&name=${data.name}&email=${data.email}&key=${data.key}`;
                 })
                 .catch(error => alert(error));
         };
