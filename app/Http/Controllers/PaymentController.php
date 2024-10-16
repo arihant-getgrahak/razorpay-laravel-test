@@ -38,6 +38,8 @@ class PaymentController extends Controller
         $dbData = [
             'razorpay_order_id' => $orderData['id'],
             'amount' => $request->amount,
+            'name' => $request->name,
+            'email' => $request->email,
         ];
 
         Order::create($dbData);
