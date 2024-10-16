@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex justify-center items-center">
+<body class="bg-gray-100 min-h-screen flex justify-center items-center gap-4">
     <form method="POST" action="{{ url('arihant/razorpay/public/pay/verify') }}" id="paymentForm">
         @csrf
         <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
@@ -21,8 +21,11 @@
             Razorpay</button>
     </form>
 
-    <script>
+    <button id="cancelBtn"
+        class="p-2 rounded-md shadow-lg border border-gray-500 hover:bg-blue-500 hover:text-white">Cancel
+        Order</button>
 
+    <script>
         document.getElementById('payBtn').onclick = function (e) {
             e.preventDefault();
             const urlParams = new URLSearchParams(window.location.search);
@@ -69,17 +72,38 @@
                         })
                     })
                     data = await res.json();
-                    if (!datasuccess) {
+                    if (!data.success) {
                         alert(data.message);
                     }
                 });
                 rzp1.open();
-
-                
             }
             catch (error) {
                 console.log(error);
             }
+        }
+
+        document.getElementById("cancelBtn").onclick = async function (e) {
+            e.preventDefault();
+            const urlParams = new URLSearchParams(window.location.search);
+            const order_id = urlParams.get('order_id');
+            console.log("cancel clicked");
+            console.log("ddd" + order_id);
+            const res = await fetch("{{ url('api/order/cancel') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    order_id: order_id
+                })
+            })
+            data = await res.json();
+            if (!data.success) {
+                alert(data.message);
+            }
+            alert("Order Cancelled");
+            window.location.href = '/';
         }
 
     </script>
