@@ -50,6 +50,7 @@ class PaymentController extends Controller
 
         $success = true;
         $error = 'Payment Failed!';
+        $res = [];
 
         if (empty($request->razorpay_payment_id) === false) {
             $api = $this->api;
@@ -71,7 +72,7 @@ class PaymentController extends Controller
                 Order::where('razorpay_order_id', $request->razorpay_order_id)->update($dbData);
                 $res = [
                     'name' => $request->name,
-                    'amount' => $request->amount * 100,
+                    'amount' => $request->amount,
                 ];
             } catch (SignatureVerificationError $e) {
                 $success = false;
@@ -88,8 +89,8 @@ class PaymentController extends Controller
             return view('orderconfirm', compact('res'));
         } else {
             $res += [
-                'status' => 'Order Confirm',
-                'error' => $error,
+                'status' => 'Payment Failed',
+                'success' => false,
             ];
 
             return view('orderconfirm', compact('res'));
