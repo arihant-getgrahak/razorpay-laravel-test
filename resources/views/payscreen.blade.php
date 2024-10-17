@@ -26,8 +26,8 @@
         Order</button>
 
     <script>
-        document.getElementById('payBtn').onclick = function (e) {
-            e.preventDefault();
+        window.onload = function () {
+            console.log("window loaded")
             const urlParams = new URLSearchParams(window.location.search);
             const name = urlParams.get('name');
             const email = urlParams.get('email');
@@ -83,7 +83,7 @@
                 alert(error);
             }
         }
-
+    
         document.getElementById("cancelBtn").onclick = async function (e) {
             e.preventDefault();
             const message = "Are you sure you want to cancel the order?";
@@ -107,7 +107,7 @@
                 alert("Order Cancelled");
                 window.location.href = '/arihant/razorpay/public';
             }
-            else{
+            else {
                 alert("Order Not Cancelled.")
             }
 
