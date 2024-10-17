@@ -16,9 +16,8 @@
         <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
         <input type="hidden" name="razorpay_signature" id="razorpay_signature">
         <button type="submit" id="payBtn"
-            class="text-black p-2 rounded-md shadow-lg border border-gray-500 hover:bg-blue-500 hover:text-white">Pay
-            with
-            Razorpay</button>
+            class="text-black p-2 rounded-md shadow-lg border border-gray-500 hover:bg-blue-500 hover:text-white">
+            Pay Again</button>
     </form>
 
     <button id="cancelBtn"
@@ -83,7 +82,64 @@
                 alert(error);
             }
         }
-    
+
+        document.getElementById("payBtn").onclick = function (e) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            const email = urlParams.get('email');
+            const amount = urlParams.get('amount');
+            const order_id = urlParams.get('order_id');
+            const razorpay_order_id = urlParams.get('razorpay_order_id');
+            const razorpay_payment_id = urlParams.get('razorpay_payment_id');
+            const razorpay_signature = urlParams.get('razorpay_signature');
+            const key = urlParams.get("key")
+            try {
+                var options = {
+                    "key": key,
+                    "amount": amount * 100,
+                    "currency": "INR",
+                    "name": name,
+                    "description": "Test Transaction",
+                    "order_id": order_id,
+                    "handler": function (response) {
+                        document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                        document.getElementById('razorpay_order_id').value = order_id;
+                        document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                        document.getElementById('paymentForm').submit();
+                    },
+                    "prefill": {
+                        "name": name,
+                        "email": email
+                    },
+                    "theme": {
+                        "color": "#F37254"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', async function (response) {
+                    const res = await fetch("{{ url('api/user/payment/fail') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            order_id: response.error.metadata.order_id,
+                            message: response.error.description
+                        })
+                    })
+                    data = await res.json();
+                    if (!data.success) {
+                        alert(data.message);
+                    }
+                });
+                rzp1.open();
+            }
+            catch (error) {
+                alert(error);
+            }
+        }
+
         document.getElementById("cancelBtn").onclick = async function (e) {
             e.preventDefault();
             const message = "Are you sure you want to cancel the order?";
@@ -104,8 +160,8 @@
                 if (!data.success) {
                     alert(data.message);
                 }
-                alert("Order Cancelled");
-                window.location.href = '/arihant/razorpay/public';
+                window.location.href = 'order-cancel';
+                return;
             }
             else {
                 alert("Order Not Cancelled.")
