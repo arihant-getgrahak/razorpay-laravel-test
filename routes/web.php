@@ -13,9 +13,13 @@ Route::get('razorpay', function () {
     return view('razorpaypayment');
 });
 
-Route::get('arihant/razorpay/public/order-confirm', function () {
+Route::get('order-confirm', function () {
     return view('orderconfirm');
 });
 Route::get('pay', function () {
     return view('payscreen');
+});
+
+Route::get('order-cancel', function () {
+    return view('ordercancel');
 });
