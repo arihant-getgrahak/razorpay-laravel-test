@@ -86,24 +86,31 @@
 
         document.getElementById("cancelBtn").onclick = async function (e) {
             e.preventDefault();
-            const urlParams = new URLSearchParams(window.location.search);
-            const order_id = urlParams.get('order_id');
+            const message = "Are you sure you want to cancel the order?";
+            if (confirm(message) === true) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const order_id = urlParams.get('order_id');
 
-            const res = await fetch("{{ url('api/order/cancel') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    order_id: order_id
+                const res = await fetch("{{ url('api/order/cancel') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        order_id: order_id
+                    })
                 })
-            })
-            data = await res.json();
-            if (!data.success) {
-                alert(data.message);
+                data = await res.json();
+                if (!data.success) {
+                    alert(data.message);
+                }
+                alert("Order Cancelled");
+                window.location.href = '/arihant/razorpay/public';
             }
-            alert("Order Cancelled");
-            window.location.href = '/arihant/razorpay/public';
+            else{
+                alert("Order Not Cancelled.")
+            }
+
         }
 
     </script>
