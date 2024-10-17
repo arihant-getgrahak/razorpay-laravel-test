@@ -20,7 +20,9 @@
             <h2 class="text-2xl font-semibold mt-4">Order Canceled</h2>
             <p class="mt-2 text-gray-600">Your order has been successfully canceled.</p>
             <button class="mt-6 bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
-                Return to Homepage
+                <a href="{{ url('/') }}">
+                    Return to Homepage
+                </a>
             </button>
         </div>
     </div>
